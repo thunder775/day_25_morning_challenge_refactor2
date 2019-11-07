@@ -21,168 +21,93 @@
 //  [ 8, 7, 3, 5, 1, 2, 9, 6, 4 ]
 //  ]) ➞ true
 bool sudokuValidator(List<List> board) {
-  //lets check if the given row has all
-  //numbers from 1 to 9, and they occur only once.
-  for (int i = 0; i < 9; i++) {
-    for (int j = 1; j <= 9; j++) {
-      if (countElementInList(board[i], j) != 1) {
-        return false;
-      }
-    }
-  }
+  return isSudokuBoardOfRightSize(board) &&
+      doCellsContainValidNumber(board) &&
+      checkRowCol(board) &&
+      checkBoxes(board);
+}
 
-  //lets check if the given column has all
-  //numbers from 1 to 9, and they occur only once.
-  int colNo = 0;
-  while (colNo < 9) {
-    List col = [];
-
-    for (int j = 0; j < 9; j++) {
-      col.add(board[j][colNo]);
-    }
-    //now that we have our first column,
-    //let check if the numbers from 1 to 9 repeat in it or not
-    for (int i = 1; i <= 9; i++) {
-      if (countElementInList(col, i) != 1) {
-//        print('$i occurred ${countElementInList(col, i)} in $col');
-        return false;
-      }
-    }
-    col = [];
-    colNo++;
-  }
-
-  //now let check the group of cells
-  //where i is from i->0-2 j ->0-2, i 0-2 j 3-5, i 0-2, j 6-8
-  //where i is from i->3-5 j ->0-2, i 0-2 j 3-5, i 0-2, j 6-8
-  //where i is from i->6-8 j ->0-2, i 0-2 j 3-5, i 0-2, j 6-8
-//---------------------
-  List group = [];
-  for (int i = 0; i <= 2; i++) {
-    for (int j = 0; j <= 2; j++) {
-      group.add(board[i][j]);
-    }
-  }
-  //now lets check if all numbers from 1-9 only occurs once in this group
-  for (int i = 1; i <= 9; i++) {
-    if (countElementInList(group, i) != 1) {
+//lets check if the board is valid or not first
+// that is, size of the board should be multiple of 3
+bool isSudokuBoardOfRightSize(List<List> board) {
+  for (List row in board) {
+    if (row.length % 3 != 0 && board.length % 3 != 0) {
       return false;
     }
   }
-
-  group = [];
-  for (int i = 3; i <= 5; i++) {
-    for (int j = 0; j <= 2; j++) {
-      group.add(board[i][j]);
-    }
-  }
-  //now lets check if all numbers from 1-9 only occurs once in this group
-  for (int i = 1; i <= 9; i++) {
-    if (countElementInList(group, i) != 1) {
-      return false;
-    }
-  }
-
-  group = [];
-  for (int i = 6; i <= 8; i++) {
-    for (int j = 0; j <= 2; j++) {
-      group.add(board[i][j]);
-    }
-  }
-  //now lets check if all numbers from 1-9 only occurs once in this group
-  for (int i = 1; i <= 9; i++) {
-    if (countElementInList(group, i) != 1) {
-      return false;
-    }
-  }
-//--------------------
-  group = [];
-  for (int i = 0; i <= 2; i++) {
-    for (int j = 3; j <= 5; j++) {
-      group.add(board[i][j]);
-    }
-  }
-  //now lets check if all numbers from 1-9 only occurs once in this group
-  for (int i = 1; i <= 9; i++) {
-    if (countElementInList(group, i) != 1) {
-      return false;
-    }
-  }
-
-  group = [];
-  for (int i = 3; i <= 5; i++) {
-    for (int j = 3; j <= 5; j++) {
-      group.add(board[i][j]);
-    }
-  }
-  //now lets check if all numbers from 1-9 only occurs once in this group
-  for (int i = 1; i <= 9; i++) {
-    if (countElementInList(group, i) != 1) {
-      return false;
-    }
-  }
-
-  group = [];
-  for (int i = 6; i <= 8; i++) {
-    for (int j = 3; j <= 5; j++) {
-      group.add(board[i][j]);
-    }
-  }
-  //now lets check if all numbers from 1-9 only occurs once in this group
-  for (int i = 1; i <= 9; i++) {
-    if (countElementInList(group, i) != 1) {
-      return false;
-    }
-  }
-  //-------------------
-  group = [];
-  for (int i = 0; i <= 2; i++) {
-    for (int j = 6; j <= 8; j++) {
-      group.add(board[i][j]);
-    }
-  }
-  //now lets check if all numbers from 1-9 only occurs once in this group
-  for (int i = 1; i <= 9; i++) {
-    if (countElementInList(group, i) != 1) {
-      return false;
-    }
-  }
-
-  group = [];
-  for (int i = 3; i <= 5; i++) {
-    for (int j = 6; j <= 8; j++) {
-      group.add(board[i][j]);
-    }
-  }
-  //now lets check if all numbers from 1-9 only occurs once in this group
-  for (int i = 1; i <= 9; i++) {
-    if (countElementInList(group, i) != 1) {
-      return false;
-    }
-  }
-
-  group = [];
-  for (int i = 0; i <= 2; i++) {
-    for (int j = 6; j <= 8; j++) {
-      group.add(board[i][j]);
-    }
-  }
-  //now lets check if all numbers from 1-9 only occurs once in this group
-  for (int i = 1; i <= 9; i++) {
-    if (countElementInList(group, i) != 1) {
-      return false;
-    }
-  }
+  print('right size');
   return true;
 }
 
-int countElementInList(List aList, int x) {
-  //if element occurs more than once then return false
-  int count = 0;
-  for (int i = 0; i < aList.length; i++) {
-    aList[i] == x ? count++ : null;
+//now lets check if the sudokuBoard contains valid numbers as per its size
+bool doCellsContainValidNumber(List<List> board) {
+  int length =
+      board.length; //length of board or number of rows in board and their size
+  //so all numbers should be form 0 to length
+  for (int row = 0; row < length; row++) {
+    for (int col = 0; col < length; col++) {
+      if (board[row][col] > length ||
+          board[row][col] < 0 ||
+          board[row][col] == 0) {
+        return false;
+      }
+    }
   }
-  return count;
+  print('valid numbers');
+  return true;
+}
+
+//now lets check each row and also each column for duplicates
+bool checkRowCol(List<List> board) {
+  int length = board.length;
+  //checking rows first
+  for (int row = 0; row < length; row++) {
+    if (board[row].toSet().length != length) {
+      return false;
+    }
+  }
+  //checking columns
+  List colElementsList = [];
+  for (int row = 0; row < length; row++) {
+    for (int col = 0; col < length; col++) {
+      colElementsList.add(board[col][row]);
+    }
+    if (colElementsList.toSet().length != length) {
+      return false;
+    }
+  }
+  print('row & col uniqe');
+  return true;
+}
+
+//now lets check if all the subBoards of size 3
+//don't have any repeating numbers
+bool checkBoxes(List<List> board) {
+  for (int row = 0; row < board.length; row = row + 3) {
+    for (int col = 0; col < board.length; col = col + 3) {
+//      print('row $row col $col');
+      if (!isBoardBoxValid(board, row, col)) {
+        return false;
+      }
+    }
+  }
+  print('all boxes unique');
+  return true;
+}
+
+bool isBoardBoxValid(List<List> board, int rowPos, int colPos) {
+  List elements = [];
+
+  for (int row = rowPos; row < rowPos + 3; row++) {
+    for (int col = colPos; col < colPos + 3; col++) {
+      elements.add(board[row][col]);
+    }
+  }
+//  print(elements); // debug print statement
+  if (elements.toSet().length != board.length) {
+    return false;
+  }
+  return true;
 }
 
 // Challenge 3
@@ -209,18 +134,15 @@ int countFactors(int number) {
 }
 
 main() {
-  print(countElementInList([1, 5, 2, 4, 1, 9, 3, 7, 6], 1));
-  print(sudokuValidator([
-    [1, 5, 2, 4, 8, 9, 3, 7, 6],
-    [7, 3, 9, 2, 5, 6, 8, 4, 1],
-    [4, 6, 8, 3, 7, 1, 2, 9, 5],
-    [3, 8, 7, 1, 2, 4, 6, 5, 9],
-    [5, 9, 1, 7, 6, 3, 4, 2, 8],
-    [2, 4, 6, 8, 9, 5, 7, 1, 3],
-    [9, 1, 4, 6, 3, 7, 5, 8, 2],
-    [6, 2, 5, 9, 4, 8, 1, 3, 7],
-    [8, 7, 3, 5, 1, 2, 9, 6, 4]
-  ]));
-  print(countFactors(9));
-  print(factorSort([9, 7, 13, 12]));
+//  print(countElementInList([1, 5, 2, 4, 1, 9, 3, 7, 6], 1));
+  List<List> board = [
+    [
+      1,
+      5,
+      2,
+    ],
+    [7, 3, 9],
+    [4, 6, 8],
+  ];
+  print(sudokuValidator(board));
 }
