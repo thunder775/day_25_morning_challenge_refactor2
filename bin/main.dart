@@ -67,10 +67,10 @@ bool checkRowCol(List<List> board) {
     }
   }
   //checking columns
-  List colElementsList = [];
-  for (int row = 0; row < length; row++) {
-    for (int col = 0; col < length; col++) {
-      colElementsList.add(board[col][row]);
+  for (int col = 0; col < length; col++) {
+    List colElementsList = [];
+    for (int row = 0; row < length; row++) {
+      colElementsList.add(board[row][col]);
     }
     if (colElementsList.toSet().length != length) {
       return false;
